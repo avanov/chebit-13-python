@@ -1,0 +1,676 @@
+-namespace module="plimsolls.formatters.code2html" name="code2html"
+doctype 5
+html lang="en"
+  head
+    title Python Developer's Daily Routine
+    meta charset="utf-8"
+    meta name="viewport" content="width=792, user-scalable=no"
+    meta http-equiv="x-ua-compatible" content="ie=edge"
+    link rel="stylesheet" href="./assets/shower/themes/ribbon/styles/screen.css"
+    link rel="stylesheet" href="./assets/font-awesome/css/font-awesome.min.css"
+    / Pygments themes here: https://github.com/richleland/pygments-css
+    link rel="stylesheet" href="./assets/pygments.css"
+
+    -scss
+       $clr_grey: #efefef;
+       $clr_asphalt: #3a4758;
+       $clr_bg_blue: #57a9e5;
+       $clr_asphalt_foreground: #fefefe;
+       .cover {
+         background-image: url('./assets/bg.png');
+       }
+      .slide {
+        background: url('./assets/bg.png');
+
+        color: $clr_asphalt_foreground;
+        h2 {
+          .footnote {
+            font-size: 32px;
+          }
+        }
+        .author {
+          color: #0f0f0f;
+          font-style: italic;
+        }
+        i { font-style: normal; }
+        pre {
+          font-family: monospace;
+          line-height: 35px;
+          code {
+            color: $clr_asphalt_foreground;
+            font-size:0.7em;
+            line-height:33px;
+            }
+        }
+        .terminal {
+          padding: 5px;
+          font-family: monospace;
+          border-radius: 5px 5px 5px 5px;
+          background: none repeat scroll 0% 0% rgb(39, 40, 34);
+          color: rgb(248, 248, 242);
+        }
+        .green {
+            color: #93ce5c;
+        }
+        .greenish-yellow {
+          color: #dde75f;
+        }
+        .pink {
+          color: #ee6d9b;
+        }
+        .orange {
+          color: #fbc639;
+        }
+        .red {
+          color: #ff6452;
+        }
+        .blue {
+          color: #51d2f6;
+        }
+        .dark-blue {
+          color: #3982f5;
+        }
+        .violet {
+          color: #bd37f2;
+        }
+        .purple {
+          color: #b08cf7;
+        }
+        .grey {
+          color: #efefef;
+        }
+      }
+      .shout {
+        background: #000;
+      }
+
+  body.list
+
+    header.caption
+
+      h1 Python Developer's Daily Routine
+      .footnote Maxim Avanov
+
+    #firstpage.slide.cover: div
+      .stripe
+        h2.green Python Developer's `.span.red Daily Routine`
+        p Maxim Avanov (github.com/avanov)
+
+      -scss
+          #firstpage {
+            background: url('pic/cover.jpg') no-repeat;
+            background-size: 100% auto;
+          }
+          h2 {
+            text-align:center;
+            font-size:70px;
+          }
+          p {
+            margin:5px 0 0;
+            text-align:center;
+            color:#FFF;
+            font-size:20px;
+            a {
+              color:#efefef;
+            }
+          }
+          .stripe {
+            background-color:rgba(0,0,0,0.8);
+            padding: 0.5em 0;
+            width:100%;
+          }
+        
+
+    .slide.shout
+      h2.green Project structure
+
+    .slide:div
+      h2.green Project structure
+      ---
+        code = """
+        ./chebit
+        |-- chebit
+        |   `-- __init__.py
+        `-- setup.py
+        """
+      pre.terminal:code  == code2html.reformat('bash', code)
+
+    .slide:div
+      h2.green setup.py
+      ---
+        code = """
+        from setuptools import setup, find_packages
+        setup(
+            name='Chebit',
+            version='0.0.1',
+            packages=find_packages(),
+            test_suite='tests',
+            tests_require=['pytest', 'coverage'],
+            install_requires=['Pyramid==1.5a2']
+        )
+        """
+      pre.terminal:code == code2html.reformat('python', code)
+
+
+    .slide:div
+      h2.green Bootstrapping
+      h4 $ python setup.py install
+      h4 $ python setup.py develop
+      h4 $ python setup.py test
+      h4 $ python setup.py regtister sdist [bdist_egg] upload
+
+    ------------------ # Package manager ----------------------------------------------
+    .slide.shout:div
+      h2.blue Package management
+
+    .slide:div
+      h2.blue pip commands
+      ---
+        code = """
+        $ pip install Pyramid
+        $ pip install Pyramid --upgrade
+        $ pip install Pyramid==1.5a2 --upgrade
+        $ pip uninstall Pyramid
+        """
+      pre.terminal:code == code2html.reformat('bash', code)
+
+    .slide:div
+      h2.blue pip commands
+      ---
+        code = """
+        $ pip freeze
+        Babel==1.3
+        Chebit==0.0.1
+        CoffeeScript==1.0.8
+        Jinja2==2.7.1
+        Mako==0.9.0
+        ...
+        """
+      pre.terminal:code == code2html.reformat('bash', code)
+
+    .slide:div
+      h2.blue pip-tools
+      ---
+        code_review = """
+        $ pip-review
+        requests==0.13.4 available (you have 0.13.2)
+        """
+
+        code_install = """
+        $ pip-review --auto
+        ... <pip install output>
+        """
+
+        code_interactive = """
+        $ pip-review --interactive
+        requests==0.14.0 available (you have 0.13.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit y
+        ...
+        """
+
+      pre.terminal.next:code == code2html.reformat('bash', code_review)
+      pre.terminal.next:code == code2html.reformat('bash', code_install)
+      pre.terminal.next:code == code2html.reformat('bash', code_interactive)
+
+    ------------------ # Cookiecutter ----------------------------------------------
+    .slide:div
+      h2.blue Cookiecutter
+      ul
+        li Generates initial project files from defined templates;
+        li File names are also templates;
+        li Transparently works with remote VCS.
+
+    .slide:div
+      h2.blue Cookiecutter template
+      ---
+        code = """
+        ./chebit-template
+        |-- cookiecutter.json
+        `-- {{cookiecutter.project_name}}
+            |-- {{cookiecutter.project_name}}
+            |   `-- __init__.py
+            `-- setup.py
+        """
+      pre.terminal:code == code2html.reformat('text', code)
+
+    .slide:div
+      h2.blue cookiecutter.json
+      ---
+        code = """
+        {
+            "project_name": "myproject",
+            "project_version": "0.0.1"
+        }
+        """
+      pre.terminal:code == code2html.reformat('json', code)
+
+
+    .slide:div
+      h2.blue Cookiecutter in action
+      ---
+        code = """
+        $ cookiecutter {project_template_path}
+        project_name (default is "myproject")? mynew
+        project_version (default is "0.0.1")? 0.1.1
+        $ tree ./mynew
+        ./mynew
+        |-- mynew
+        |   `-- __init__.py
+        `-- setup.py
+        """
+      pre.terminal:code == code2html.reformat('bash', code)
+
+    ------------------ # Virtualenv ----------------------------------------------
+    .slide.shout:div
+      h2.greenish-yellow We'd like to isolate project environments
+
+
+    .slide:div
+      h2.greenish-yellow virtualenv
+      ---
+        code = """
+        $ virtualenv ~/venv/{project_name}
+        $ source ~/venv/{project_name}/bin/activate
+        """
+        code_next = """
+        $ virtualenv ~/venv/{project_name} -p python3
+        """
+      pre.terminal:code  == code2html.reformat('bash', code)
+      h2.next.greenish-yellow What if we need another Python version?
+      pre.terminal.next:code == code2html.reformat('bash', code_next)
+
+
+    .slide.shout:div
+      h2.greenish-yellow Still not happy enough!
+
+    .slide.shout:div
+      h2.greenish-yellow Introducing pyenv
+
+    .slide:div
+      h2.greenish-yellow pyenv - 5 steps to happiness
+      ---
+        code = """
+        $ git clone git://github.com/yyuu/pyenv.git ~/pyenv
+        $ echo 'export PYENV_ROOT="$HOME/pyenv"' >> ~/.bashrc
+        $ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+        $ echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+        $ exec $SHELL
+        """
+      pre.terminal:code  == code2html.reformat('bash', code)
+
+
+    .slide:div
+      h2.greenish-yellow pyenv - Rise and Shine!
+      ---
+        code = """
+        $ pyenv install -l
+        $ pyenv install 2.7.6
+        $ pyenv install 3.3.3
+        $ pyenv install pypy-2.2.1
+        $ pyenv rehash
+        """
+      pre.terminal:code  == code2html.reformat('bash', code)
+
+
+
+    .slide:div
+      h2.greenish-yellow The Happiness
+      h4.next $ pyenv versions
+      h4.next $ pyenv version
+      h4.next $ pyenv local 2.7.6 3.3.3
+      h4.next $ pyenv global 3.3.3
+      h4.next $ pyenv shell pypy-2.2.1
+      h4.next $ pyenv whence 2to3
+
+    .slide:div
+      h2.greenish-yellow ...
+      ---
+        code_which = """
+        $ which python
+        /home/ghostwriter/pyenv/shims/python
+        """
+
+        code = """
+        $ python
+        Python 2.7.3 (87aa9de10f9c, Nov 24 2013, 18:48:13)
+        [PyPy 2.2.1 with GCC 4.6.3] on linux2
+        >>>> 
+        """
+      pre == code2html.reformat('bash', code_which)
+      pre == code2html.reformat('bash', code)
+
+    .slide.shout:div
+      h2.greenish-yellow virtualenv meets pyenv
+
+    .slide:div
+      h2.greenish-yellow pyenv-virtualenv
+      pre.terminal = code2html.reformat('bash',"""
+              $ git clone git://github.com/yyuu/pyenv-virtualenv.git ~/pyenv/plugins/pyenv-virtualenv
+              """)
+
+      pre:code.terminal = code2html.reformat('bash', '''
+              $ pyenv virtualenv pypy-2.2.1 ~/venv/{project_name}
+              ''')
+
+    .slide:div
+      h2.greenish-yellow pyenv-virtualenv in action
+      ---
+        code = """
+        $ pyenv virtualenvs
+        {project_name} (created from /home/ghostwriter/pyenv/versions/pypy-2.2.1)
+        """
+      pre.terminal:code = code2html.reformat('bash', code)
+      ---
+        code = """
+        $ source ~/pyenv/versions/{project_name}/bin/activate
+        """
+      pre.terminal.next:code = code2html.reformat('bash', code)
+
+
+
+    ------------------ # Virtualization ----------------------------------------------
+    .slide.shout:div
+      h2.greenish-yellow Well done!
+
+    .slide.shout:div
+      h2.grey Now, what about other components?
+
+    .slide.cover.shout:div
+      h2.red Virtualization
+
+    .slide:div
+      h2.red Vagrant
+      ul
+        li Written in Ruby
+        li Relies on VirtualBox
+        li Runs on Linux / OS X / Win
+    .slide:div
+      h2.red Juju
+      ul
+        li Written in Python / Go
+        li Relies on LXC
+        li Linux only
+    .slide:div
+      h2.red Docker
+      ul
+        li Written in Go
+        li Relies on LXC and AUFS
+        li Linux only
+
+    #vagrant-success.slide:div
+      h2.red Vagrant's Success Story...
+      ol
+        li Put a Vagrantfile into the project root
+        li $ vagrant up
+        li $ vagrant ssh
+        li Profit!
+
+
+    #vagrantfile.slide:div
+      h2.red Vagrantfile
+      ---
+        code = """
+        Vagrant.configure("2") do |config|
+            config.vm.box = "project_name"
+            config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+            config.vm.network :private_network, ip: "192.168.33.100"
+        end
+        """
+      pre.terminal:code = code2html.reformat('ruby', code)
+
+      -scss
+        #vagrantfile {
+           code {
+            font-size:0.75em;
+          }
+        }
+
+    #vagrant-success-2.slide:div
+      h2.red ...Vagrant's Success Story
+      ol
+        li Put a Vagrantfile into the project root
+        li $ vagrant up
+        li $ vagrant ssh
+        li `span.incorrect Profit!` `span.correct.next ..???`
+        li.next Deployment
+
+
+      -scss
+        #vagrant-success-2 {
+          .incorrect {
+            text-decoration:line-through;
+          }
+          .correct {
+            text-decoration:none;
+          }
+        }
+
+    ------------------ # Deployment ----------------------------------------------
+
+    .slide:div
+      h2.red Deployment tools
+      h4 Chef (Ruby)
+      h4 Puppet (Ruby)
+      h4 Ansible (Python)
+      h4 Salt (Python)
+
+    .slide:div
+      h2.red Ansible Success Story
+      ol
+        li Specify an inventory file
+        li Specify a playbook
+        li $ ansible-playbook ./playbook.yml -i ./hosts
+
+    .slide:div
+      h2.red Ansible inventory
+      ---
+        code = """
+        [develop-vm]
+        192.168.33.100
+        """
+      pre.terminal:code = code2html.reformat('ini', code)
+
+    #ansible-playbook.slide:div
+      h2.red Ansible playbook
+      ---
+        code = """
+        ---
+        - 
+          hosts: develop-vm
+          sudo: yes
+          tasks:
+            - 
+              name: ensure apt cache is up to date
+              action: apt update_cache=yes
+        """
+      pre.terminal:code = code2html.reformat('yaml', code)
+      a href='http://www.ansibleworks.com/docs/modules.html' http://www.ansibleworks.com/docs/modules.html
+
+      -scss
+        #ansible-playbook {
+           code {
+            font-size:0.7em;
+            line-height:30px;
+          }
+        }
+
+
+    .slide:div
+      h2.red Ansible meets Vagrant
+      ---
+        code = """
+        $ ansible-playbook ./playbook.yml -i ./hosts -v -u vagrant -c paramiko --private-key=$HOME/.vagrant.d/insecure_private_key
+        """
+      pre.terminal = code2html.reformat('bash', code)
+      h2.next.red or
+      pre.terminal.next = code2html.reformat('bash', '$ vagrant provision')
+      
+
+    #ansible-vagrant.slide:div
+      h2.red Ansible - Vagrant Integration
+      ---
+        code = """
+        # Vagrantfile
+        Vagrant.configure("2") do |config|
+          # ...
+          config.vm.provision :ansible do |ansible|
+            ansible.playbook = "./playbook.yml"
+            ansible.inventory_path = "./hosts"
+            ansible.verbose = "v"
+          end
+        end
+        """
+      pre.terminal:code = code2html.reformat('ruby', code)
+
+      -scss
+        #ansible-vagrant {
+           code {
+            font-size:0.7em;
+            line-height:33px;
+          }
+        }
+
+    ------------------ # Python Web Dev ----------------------------------------------
+
+    #pywebdev.slide.cover.shout:div
+      h2.purple Python & Web
+      
+
+    .slide:div
+      h2.purple Web Server Gateway Interface
+      p Standardized by PEP 333, PEP 3333
+      --- 
+          code = """
+          def application(environ, start_response):
+              start_response('200 OK', [('Content-Type', 'text/plain')])
+              yield 'Hello World\\n'
+          """
+      pre.terminal:code == code2html.reformat('python', code)
+
+
+    .slide:div
+      h2.purple WSGI Servers
+      ul
+        li CherryPy WSGI Server
+        li gunicorn
+        li tornado.wsgi
+        li uWSGI
+        li Waitress
+      a href='http://nichol.as/benchmark-of-python-web-servers' http://nichol.as/benchmark-of-python-web-servers
+
+    .slide.shout:div
+      h2..purple Frameworks
+
+    .slide:div
+      h2.purple Heavyweights
+      ul
+        li Django
+        li Twisted
+        li web2py
+        li Zope
+
+    .slide: div
+      h2.purple Middleweights
+      ul
+        li CherryPy
+        li Pyramid
+        li Tornado
+        li TurboGears
+
+    .slide:div
+      h2.purple Flyweights
+      ul
+        li Bottle
+        li Flask
+        li Webpy
+
+    .slide.shout:div
+      h2.orange Database Access
+
+    .slide:div
+      h2.orange ORM
+      ul
+        li SQLAlchemy ORM
+        li Django ORM (Django only)
+        li Pony ORM
+        li Peewee
+
+    .slide:div
+      h2.orange Something else
+      ul
+        li Native DB-API 2.0 (standardized with PEP 249)
+        li SQLAlchemy's raw queries
+        li mosql
+
+    .slide:div
+      h2.orange SQL DDL Versioning & Data Migration
+      ul
+        li South (Django only)
+        li Alembic (SQLAlchemy)
+        li Pyrseas
+
+    .slide.shout:div
+      h2.dark-blue Background task processing
+
+    .slide:div
+      h2.dark-blue Celery
+      ul
+        li Out of the box solution for complex cases;
+        li Multiple brokers - RabbitMQ, Redis, RDBMS, SQS, MongoDB etc;
+        li Tasks scheduler;
+        li Results backends.
+    .slide:div
+      h2.dark-blue RQ (Redis Queue)
+      ul
+        li Designed to have a low barrier to enter;
+        li Uses Redis' Pub/Sub feature.
+
+
+    .slide.shout:div
+      h2.pink Process managers
+
+    .slide:div
+      h2.pink Process managers
+      ul
+        li Supervisor
+        li Circus.io
+
+    .slide.shout:div
+      h2.red Sentry
+
+    .slide.cover:div
+      img src='pic/sentry-1.png' width='100%'
+
+    .slide.cover:div
+      img src='pic/sentry-2.png' width='100%'
+
+    .slide.cover:div
+      img src='pic/sentry-3.png' width='100%'
+
+    .slide:div
+      h2.red Testing tools
+      ul
+        li unittest
+        li py.test
+        li nose
+        li WebTest
+        li coverage
+        li tox
+
+    #lastpage.slide.cover.shout:div
+        h2.green Thank you!
+
+      -scss
+        #lastpage {
+          background: url('pic/cover-end.jpg') no-repeat;
+          background-size: 100% auto;
+          text-shadow: 5px 3px #000;
+        }
+
+    p.badge
+      a href="https://github.com/avanov/chebit-13-python" Fork me on GitHub `i.icon-github.icon-large`
+
+    .progress: div
+
+    <!-- Copyright © 2013 Maxim Avanov -->
+    script src="assets/shower/shower.min.js" 

@@ -1,4 +1,1 @@
-chebit-13-python
-================
-
-Chebit'13 Slides
+License: CC BY 3.0
